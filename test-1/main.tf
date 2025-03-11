@@ -1,39 +1,40 @@
 variable "nodes" {
-  description = "Control Plane Node(s)"
-  type        = list(object({
-    arch             = string
-    hostname         = string
-    operatingSystem  = string
-    privateip        = string
-    kubelet_args     = optional(map(string),{})
-    roles            = list(string)
-    ssh = object({
-      ipAddress       = string
-      port            = optional(string, "22")
-      privateKeyPath  = string
-      username        = string
-    })
-  }))
-  
-  default = [
-    {
-      arch            = "amd64"
-      hostname        = "ip-172-31-61-40"
-      operatingSystem = "Ubuntu20.04"
-      privateip       = "172.31.61.40"
-      kubelet_args = {
-        "max-pods" = "6"
-        "<key>"    = "<value>"
+  description = "Node details as an object with a list of nodes"
+  type = object({
+    nodes = list(object({
+      arch            = optional(string, "amd64")
+      hostname        = string
+      operatingSystem = optional(string, "Ubuntu22.04")
+      privateip       = string
+      kubelet_args    = optional(map(string), {})
+      roles           = optional(list(string), [])
+      ssh = object({
+        ipAddress      = string
+        port           = optional(string, "22")
+        privateKeyPath = string
+        username       = string
+      })
+    }))
+  })
+
+  default = {
+    nodes = [
+      {
+        arch            = "amd64"
+        hostname        = "default-host"
+        operatingSystem = "Ubuntu22.04"
+        privateip       = "192.168.1.100"
+        kubelet_args    = { "max-pods" = "10" }
+        roles           = ["Worker"]
+        ssh = {
+          ipAddress      = "203.0.113.10"
+          port           = "22"
+          privateKeyPath = "default-key.pem"
+          username       = "ubuntu"
+        }
       }
-      roles = ["Master", "Worker", "Storage"]
-      ssh = {
-        ipAddress      = "35.86.208.181"
-        port           = "22"
-        privateKeyPath = "mks-test.pem"
-        username       = "ubuntu"
-      }
-    }
-  ]
+    ]
+  }
 }
 
 variable "private_key" {
