@@ -1,45 +1,39 @@
-variable "control_plane_nodes" {
+variable "nodes" {
   description = "Control Plane Node(s)"
-  type        = map(any)
-  default = {
-    "hostname-1" = {
-      "arch"             = "amd64"
-      "hostname"         = "hostname-1"
-      "private_ip"       = "10.1.0.67"
-      "operating_system" = "Ubuntu22.04"
-      "roles"            = ["ControlPlane", "Worker"]
-      "ssh" = {
-        "ip_address"       = "129.146.178.0"
-        "port"            = "22"
-        "private_key_path" = "private-key"
-        "username"        = "ubuntu"
+  type        = list(object({
+    arch             = string
+    hostname         = string
+    operatingSystem  = string
+    privateip        = string
+    kubelet_args     = optional(map(string),{})
+    roles            = list(string)
+    ssh = object({
+      ipAddress       = string
+      port            = optional(string, "22")
+      privateKeyPath  = string
+      username        = string
+    })
+  }))
+  
+  default = [
+    {
+      arch            = "amd64"
+      hostname        = "ip-172-31-61-40"
+      operatingSystem = "Ubuntu20.04"
+      privateip       = "172.31.61.40"
+      kubelet_args = {
+        "max-pods" = "6"
+        "<key>"    = "<value>"
+      }
+      roles = ["Master", "Worker", "Storage"]
+      ssh = {
+        ipAddress      = "35.86.208.181"
+        port           = "22"
+        privateKeyPath = "mks-test.pem"
+        username       = "ubuntu"
       }
     }
-  }
-}
-
-variable "worker_nodes" {
-  description = "Worker Node(s)"
-  type        = map(any)
-  default = {
-    "worker-1" = {
-      "arch"             = "amd64"
-      "hostname"         = "worker-1"
-      "private_ip"       = "10.1.0.68"
-      "kubelet_extra_args" = {
-        "max-pods"                      = "400"
-        "cpu-manager-reconcile-period"  = "40s"
-      }
-      "operating_system" = "Ubuntu22.04"
-      "roles"            = ["Worker"]
-      "ssh" = {
-        "ip_address"       = "129.146.178.1"
-        "port"            = "22"
-        "private_key_path" = "private-key"
-        "username"        = "ubuntu"
-      }
-    }
-  }
+  ]
 }
 
 variable "private_key" {
@@ -48,12 +42,38 @@ variable "private_key" {
   default     = "..sssh"
 }
 
-output "control_plane_nodes" {
-  value = var.control_plane_nodes
+variable "noofnodes" {
+  description = "Number of nodes"
+  type        = number
+  default     = 1
 }
 
-output "worker_nodes" {
-  value = var.worker_nodes
+variable "cpu" {
+  description = "Number of CPU cores per node"
+  type        = number
+  default     = 4
+}
+
+variable "gpu" {
+  description = "Number of GPUs per node"
+  type        = number
+  default     = 0
+}
+
+variable "memory" {
+  description = "Memory per node in MB"
+  type        = number
+  default     = 8192
+}
+
+variable "storage" {
+  description = "Storage per node in GB"
+  type        = number
+  default     = 100
+}
+
+output "nodes" {
+  value = var.nodes
 }
 
 output "private_key" {
