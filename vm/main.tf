@@ -19,7 +19,7 @@ variable "gpu" {
 variable "memory_gb" {
   description = "Memory per node in GB"
   type        = number
-  default     = 8192
+  default     = 8
 }
 
 variable "storage_gb" {
@@ -28,9 +28,23 @@ variable "storage_gb" {
   default     = 100
 }
 
-variable "gpu_type" {}
-variable "gpu_vendor" {}
-variable "gpu_model" {}
+variable "gpu_type" {
+  description = "Type of GPU"
+  type        = string
+  default     = ""
+}
+
+variable "gpu_vendor" {
+  description = "GPU vendor"
+  type        = string
+  default     = ""
+}
+
+variable "gpu_model" {
+  description = "GPU model"
+  type        = string
+  default     = ""
+}
 
 
 output "private_key" {
