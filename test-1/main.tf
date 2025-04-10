@@ -1,36 +1,34 @@
 variable "nodes" {
-  description = "Node details as a map keyed by hostname"
   type = map(object({
-    arch              = optional(string, "amd64")
-    hostname          = string
-    private_ip        = string
-    kubelet_extra_args = optional(map(string), {})
-    operating_system  = optional(string, "Ubuntu22.04")
-    roles             = optional(list(string), [])
+    arch               = string
+    hostname           = string
+    operating_system   = string
+    private_ip         = string
+    kubelet_extra_args = optional(map(string))
+    roles              = set(string)
     ssh = object({
       ip_address       = string
-      port             = optional(string, "22")
+      port             = string
       private_key_path = string
       username         = string
     })
   }))
-
   default = {
-    "hostname-1" = {
-      arch              = "amd64"
-      hostname          = "hostname-1"
-      private_ip        = "10.1.0.67"
+    hostname1 = {
+      arch             = "amd64"
+      hostname         = "hostname1"
+      operating_system = "Ubuntu22.04"
+      private_ip       = "10.12.25.234"
       kubelet_extra_args = {
-        "max-pods"                    = "300"
-        "cpu-manager-reconcile-period" = "30s"
+        max-pods                     = "300",
+        cpu-manager-reconcile-period = "30s"
       }
-      operating_system  = "Ubuntu22.04"
-      roles             = ["ControlPlane", "Worker"]
+      roles = ["ControlPlane", "Worker"]
       ssh = {
-        ip_address       = "129.146.178.0"
+        ip_address       = "10.12.25.234"
         port             = "22"
-        private_key_path = "private-key"
-        username         = "ubuntu"
+        private_key_path = "/path/to/private/key"
+        username         = "user"
       }
     }
   }
