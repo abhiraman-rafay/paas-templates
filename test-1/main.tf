@@ -1,41 +1,41 @@
 variable "nodes" {
-  description = "Node details as an object with a list of nodes"
-  type = object({
-    nodes = list(object({
-      arch            = optional(string, "amd64")
-      hostname        = string
-      operatingSystem = optional(string, "Ubuntu22.04")
-      privateip       = string
-      kubelet_args    = optional(map(string), {})
-      roles           = optional(list(string), [])
-      ssh = object({
-        ipAddress      = string
-        port           = optional(string, "22")
-        privateKeyPath = string
-        username       = string
-      })
-    }))
-  })
+  description = "Node details as a map keyed by hostname"
+  type = map(object({
+    arch              = optional(string, "amd64")
+    hostname          = string
+    private_ip        = string
+    kubelet_extra_args = optional(map(string), {})
+    operating_system  = optional(string, "Ubuntu22.04")
+    roles             = optional(list(string), [])
+    ssh = object({
+      ip_address       = string
+      port             = optional(string, "22")
+      private_key_path = string
+      username         = string
+    })
+  }))
 
   default = {
-    nodes = [
-      {
-        arch            = "amd64"
-        hostname        = "default-host"
-        operatingSystem = "Ubuntu22.04"
-        privateip       = "192.168.1.100"
-        kubelet_args    = { "max-pods" = "10" }
-        roles           = ["Worker"]
-        ssh = {
-          ipAddress      = "203.0.113.10"
-          port           = "22"
-          privateKeyPath = "default-key.pem"
-          username       = "ubuntu"
-        }
+    "hostname-1" = {
+      arch              = "amd64"
+      hostname          = "hostname-1"
+      private_ip        = "10.1.0.67"
+      kubelet_extra_args = {
+        "max-pods"                    = "300"
+        "cpu-manager-reconcile-period" = "30s"
       }
-    ]
+      operating_system  = "Ubuntu22.04"
+      roles             = ["ControlPlane", "Worker"]
+      ssh = {
+        ip_address       = "129.146.178.0"
+        port             = "22"
+        private_key_path = "private-key"
+        username         = "ubuntu"
+      }
+    }
   }
 }
+
 
 variable "private_key" {
   description = "Private key"
