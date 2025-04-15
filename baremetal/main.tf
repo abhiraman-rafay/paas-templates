@@ -1,4 +1,4 @@
-variable "gpu_server_type" {
+variable "gputype" {
   description = "GPU server type"
   type        = string
 }
@@ -8,9 +8,9 @@ variable "device_details" {
   type        = any
 }
 
-output "gpu_server_type" {
+output "gputype" {
   description = "The GPU server type"
-  value       = var.gpu_server_type
+  value       = var.gputype
 }
 
 output "device_details" {
