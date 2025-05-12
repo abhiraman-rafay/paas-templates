@@ -1,7 +1,6 @@
-variable "ssh_key" {
-  description = "Private key"
-  type        = string
-  default     = "..sssh"
+variable "device_details" {
+  description = "Input as a JSON object"
+  type        = any
 }
 
 variable "cpu" {
@@ -16,38 +15,12 @@ variable "gpu" {
   default     = 0
 }
 
-variable "memory_gb" {
-  description = "Memory per node in GB"
-  type        = number
-  default     = 8
-}
-
-variable "storage_gb" {
-  description = "Storage per node in GB"
-  type        = number
-  default     = 100
-}
-
-variable "gpu_type" {
-  description = "Type of GPU"
+variable "gputype" {
+  description = "GPU server type"
   type        = string
-  default     = ""
 }
 
-variable "gpu_vendor" {
-  description = "GPU vendor"
-  type        = string
-  default     = ""
-}
-
-variable "gpu_model" {
-  description = "GPU model"
-  type        = string
-  default     = ""
-}
-
-
-output "private_key" {
-  value     = var.ssh_key
-  sensitive = true
+output "device_details" {
+  description = "Raw device details JSON blob"
+  value       = var.device_details
 }
