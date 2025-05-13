@@ -9,6 +9,16 @@ variable "cpu" {
   default     = 4
 }
 
+variable "memoryMB" {
+  description = "memoryMB"
+  type        = number
+}
+
+variable "storageGB" {
+  description = "storageGB"
+  type        = number
+}
+
 variable "gpu" {
   description = "Number of GPUs per node"
   type        = number
